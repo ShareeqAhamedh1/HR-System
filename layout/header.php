@@ -1,3 +1,12 @@
+<?php
+include "backend/conn.php";
+if(!isset($_SESSION['h_a_id'])){
+	header('location:login.php');
+	exit();
+}
+
+    ?>
+
 <!DOCTYPE html>
 <php lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light" data-menu-styles="light" data-toggled="close">
 
@@ -31,7 +40,7 @@
     <link href="assets/css/icons.css" rel="stylesheet" >
 
     <!-- Node Waves Css -->
-    <link href=assets/libs/node-waves/waves.min.css" rel="stylesheet" > 
+    <link href="assets/libs/node-waves/waves.min.css" rel="stylesheet" > 
 
     <!-- Simplebar Css -->
     <link href="assets/libs/simplebar/simplebar.min.css" rel="stylesheet" >
@@ -43,6 +52,8 @@
     <!-- Choices Css -->
     <link rel="stylesheet" href="assets/libs/choices.js/public/assets/styles/choices.min.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
 <link rel="stylesheet" href="assets/libs/apexcharts/apexcharts.css">
 
@@ -51,7 +62,7 @@
 <body>
 
     <!-- Start Switcher -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="switcher-canvas" aria-labelledby="offcanvasRightLabel">
+    <!-- <div class="offcanvas offcanvas-end" tabindex="-1" id="switcher-canvas" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title text-default" id="offcanvasRightLabel">Switcher</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -509,7 +520,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- End Switcher -->
 
 
@@ -590,10 +601,10 @@
                     <!-- Start::header-element -->
                     <div class="header-element header-fullscreen">
                         <!-- Start::header-link -->
-                        <a onclick="openFullscreen();" href="#" class="header-link">
+                        <!-- <a onclick="openFullscreen();" href="#" class="header-link">
                             <i class="fe fe-maximize full-screen-open header-link-icon"></i>
                             <i class="fe fe-minimize full-screen-close header-link-icon d-none"></i>
-                        </a>
+                        </a> -->
                         <!-- End::header-link -->
                     </div>
                     <!-- End::header-element -->
@@ -924,7 +935,7 @@
                         <ul class="main-header-dropdown dropdown-menu pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
                             aria-labelledby="mainHeaderProfile">
                             <li><a class="dropdown-item d-flex" href="profile.php"><i
-                                        class="ti ti-user-circle fs-18 me-2 op-7"></i>Profile</a></li>
+                                        class="ti ti-user-circle fs-18 me-2 op-7"></i>Hotel Details</a></li>
                             <li><a class="dropdown-item d-flex" href="email.php"><i
                                         class="ti ti-inbox fs-18 me-2 op-7"></i>Inbox <span
                                         class="badge bg-success-transparent ms-auto">25</span></a></li>
@@ -953,10 +964,10 @@
                     <!-- Start::header-element -->
                     <div class="header-element">
                         <!-- Start::header-link|switcher-icon -->
-                        <a href="#" class="header-link switcher-icon" data-bs-toggle="offcanvas"
+                        <!-- <a href="#" class="header-link switcher-icon" data-bs-toggle="offcanvas"
                             data-bs-target="#switcher-canvas">
                             <i class="fe fe-settings header-link-icon"></i>
-                        </a>
+                        </a> -->
                         <!-- End::header-link|switcher-icon -->
                     </div>
                     <!-- End::header-element -->
@@ -1006,6 +1017,43 @@
                             <a href="index.php" class="side-menu__item">
                                 <i class="fe fe-home side-menu__icon"></i>
                                 <span class="side-menu__label">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="hoteldetails.php" class="side-menu__item">
+                                <i class="ri-hotel-line side-menu__icon"></i>
+                                <!-- <i class="ri-hotel-line"></i> -->
+                                <span class="side-menu__label">Hotel Details</span>
+                                <!-- <a href="profile.php" class="side-menu__item"> Profile</a>  -->
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="editprofile.php" class="side-menu__item">
+                                <i class="fe fe-edit side-menu__icon"></i>
+                                <span class="side-menu__label">Edit Profile</span>
+                                <!-- <a href="editprofile.php" class="side-menu__item"> Edit Profile</a> -->
+
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="email.php" class="side-menu__item">
+                                <i class="fe fe-mail side-menu__icon"></i>
+                                <span class="side-menu__label">Mail-Inbox</span>
+                                <!-- <a href="email.php" class="side-menu__item"> Mail-Inbox</a> -->
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="invoice.php" class="side-menu__item">
+                                <i class="ri-bill-line side-menu__icon"></i>
+                                <span class=" side-menu__label">Invoice</span>
+                                <!-- <a href="invoice.php" class="side-menu__item"> Invoice</a> -->
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="pricing.php" class="side-menu__item">
+                                <i class="ri-price-tag-3-line side-menu__icon"></i>
+                                <span class="side-menu__label">Pricing Tables</span>
+                                <!-- <a href="pricing.php" class="side-menu__item"> Pricing Tables</a> -->
                             </a>
                         </li>
                     
@@ -1096,7 +1144,7 @@
                       
                        
                         <!-- Start::slide -->
-                        <li class="slide has-sub">
+                        <!-- <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="fe fe-layers side-menu__icon"></i>
                                 <span class="side-menu__label">Pages</span>
@@ -1145,7 +1193,7 @@
                                 </li>
                                 
                             </ul>
-                        </li>
+                        </li> -->
                         <!-- End::slide -->
 
                        
@@ -1193,3 +1241,4 @@
 
         </aside>
         <!-- End::app-sidebar -->
+
