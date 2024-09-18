@@ -76,6 +76,60 @@ $h_a_id=$_SESSION['h_a_id'];
 												<?php
 												}
 												?>
+
+												<?php
+												$sqlHotelPublish="SELECT * FROM tbl_hotel WHERE h_id='$h_id'";
+												$rsHotelPublish=$conn->query($sqlHotelPublish);
+												$rowHotelPublish=$rsHotelPublish->fetch_assoc();
+
+												$publishStatus=$rowHotelPublish['publish_status'];
+
+
+												if ($rsHotelPublish > 0) {
+
+													if($publishStatus==1){
+													?>
+														<a class="btn btn-icon btn-warning btn-wave waves-effect waves-light"
+															onclick="openViewHotelPublishModal(<?= $h_id ?>)" 
+															data-bs-toggle="tooltip" 
+															data-bs-original-title="Publish Hotel">
+															<i class="ri-file-warning-line"></i>
+														</a>
+													<?php
+													}
+
+													if ($publishStatus==2) {
+														?>
+														<a class="btn btn-success btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Published">
+													Published
+													</a>
+														<a class="btn btn-danger btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													onclick="openViewHotelPublishModalReject(<?= $h_id ?>)"
+													data-bs-original-title="Reject">
+													Reject
+													</a>
+														<?php
+													}else if ($publishStatus==3) {
+														?>
+														<a class="btn btn-danger btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Rejected">
+													Rejected
+													</a>
+
+													<a class="btn btn-success btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													onclick="openViewHotelPublishModal(<?= $h_id ?>)"
+													data-bs-original-title="Publish">
+													Publish
+													</a>
+														<?php
+													}
+												}
+													?>
 											</div>
 
 											<div class="card custom-card overflow-hidden">
@@ -234,6 +288,7 @@ $h_a_id=$_SESSION['h_a_id'];
 			function openViewUSerModal(id){
 				$('#editModal').modal('show');
 				$('#load_edit_data').load('ajax/viewHotel.php',{ h_id:id });
+				$('#load_data').empty();
 				
 			}
 
@@ -644,4 +699,145 @@ $h_a_id=$_SESSION['h_a_id'];
 
 
 				}
+
+												function openViewHotelPublishModal(h_id) {
+													swal({
+														title: "Are you sure?",
+														text: "Do you want to approve the request?",
+														icon: "warning",
+														buttons: {
+															cancel: {
+																text: "No",
+																value: false,
+																visible: true,
+																className: "btn-danger",
+																closeModal: true
+															},
+															confirm: {
+																text: "Yes",
+																value: true,
+																visible: true,
+																className: "btn-success",
+																closeModal: true
+															}
+														},
+														dangerMode: true,
+													}).then((value) => {
+														// Check whether the user clicked Yes or No
+														let status = value ? "yes" : "no"; // If true (Yes), else (No)
+
+														// Proceed only if a valid ID is provided
+														if (h_id) {
+															// Make an AJAX call to update the database based on user's choice
+															$.ajax({
+																url: "backend/approve_publish.php", // URL of your backend file
+																type: "POST",       // Use POST method to send the data securely
+																data: {
+																	h_id: h_id,   // ID of the request or item to update
+																	status: status   // Yes or No status
+																},
+																success: function(resp) {
+																	// Handle the response from the server
+																	if (resp == 200) {
+																		swal("Approved", "Request has been approved", "success")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																	} else if (resp == 201) {
+																		swal("Rejected", "Request has been rejected", "error")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																	} else {
+																		swal("Cancelled", "Something went wrong", "error")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																		console.log(resp); // Log the unexpected response for debugging
+																	}
+																},
+																error: function(error) {
+																	swal("Error", "Could not update the request status", "error");
+																}
+															});
+														} else {
+															swal("Error", "Invalid hotel ID", "error");
+														}
+													});
+												}
+
+												function openViewHotelPublishModalReject(h_id) {
+													swal({
+														title: "Are you sure?",
+														text: "Do you want to Reject?",
+														icon: "warning",
+														buttons: {
+															cancel: {
+																text: "No",
+																value: false,
+																visible: true,
+																className: "btn-danger",
+																closeModal: true
+															},
+															confirm: {
+																text: "Yes",
+																value: true,
+																visible: true,
+																className: "btn-success",
+																closeModal: true
+															}
+														},
+														dangerMode: true,
+													}).then((value) => {
+														// Check whether the user clicked Yes or No
+														let status = value ? "yes" : "no"; // If true (Yes), else (No)
+
+														// Proceed only if a valid ID is provided
+														if (h_id) {
+															// Make an AJAX call to update the database based on user's choice
+															$.ajax({
+																url: "backend/approve_publish_reject.php", // URL of your backend file
+																type: "POST",       // Use POST method to send the data securely
+																data: {
+																	h_id: h_id,   // ID of the request or item to update
+																	status: status   // Yes or No status
+																},
+																success: function(resp) {
+																	// Handle the response from the server
+																	if (resp == 200) {
+																		swal("Rejected", "Hotel has been rejected", "success")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																	} else if (resp == 201) {
+																		swal("Not Rejected", "Request has been rejected", "error")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																	} else {
+																		swal("Cancelled", "Something went wrong", "error")
+																			.then(() => {
+																				$('#editModal').modal('hide');
+																				window.location.reload(); // Reload the page
+																			});
+																		console.log(resp); // Log the unexpected response for debugging
+																	}
+																},
+																error: function(error) {
+																	swal("Error", "Could not update the request status", "error");
+																}
+															});
+														} else {
+															swal("Error", "Invalid hotel ID", "error");
+														}
+													});
+												}
+
+												
+
 		</script>

@@ -75,4 +75,15 @@ function uploadImage($fileName,$filePath,$allowedList,$errorLocation){
   }
 }
 
+function getDataBack($conn,$table,$col_id,$id,$coulmn){
+  $sql = "SELECT * FROM $table WHERE $col_id = '$id'";
+  $rs = $conn->query($sql);
+
+  if ($rs->num_rows > 0) {
+    $row = $rs->fetch_assoc();
+
+    return $row[$coulmn];
+  }
+}
+
 ?>

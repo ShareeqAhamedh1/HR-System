@@ -20,6 +20,13 @@ $e_thumb_img=$rowSelect['h_thumb_img'];
 $e_small_img=$rowSelect['h_small_thumb_img'];
 $e_about=$rowSelect['h_about'];
 
+$imageSmall=getDataBack($conn,'tbl_hotel','h_id',$h_id,'h_small_thumb_img');
+        unlink('../../assets/img/small_img/'.$imageSmall);
+
+        $imageThumb=getDataBack($conn,'tbl_hotel','h_id',$h_id,'h_thumb_img');
+        unlink('../../assets/img/hotel_thumb/'.$imageThumb);
+
+
 $sqlUpdate="UPDATE tbl_hotel SET 
             h_name='$e_name',
             h_address='$e_address',

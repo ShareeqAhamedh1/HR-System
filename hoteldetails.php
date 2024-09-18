@@ -61,7 +61,7 @@ $h_a_id=$_SESSION['h_a_id'];
 													<i class="ri-open-arm-line"></i>
 													</a>
 												</div>
-											<div class="card custom-card overflow-hidden">
+												<div class="card custom-card overflow-hidden">
 													<div class="card-body">
 														<div class="row align-items-center"> <!-- Align items vertically centered -->
 															<div class="col-lg-2 d-flex justify-content-center"> <!-- Center the icon within its column -->
@@ -76,6 +76,69 @@ $h_a_id=$_SESSION['h_a_id'];
 															</div>
 														</div>
 													</div>
+												</div>
+
+												<div class="btn-list">
+
+												<?php 
+												$publish_status = $rowsHotel['publish_status'];
+												$hotel_id = $rowsHotel['h_id'];
+
+												if($publish_status == 0) {
+													// Hotel is not yet published
+													?>
+													<a class="btn btn-success btn-wave waves-effect waves-light"
+													onclick="publish(<?= $hotel_id; ?>, 1)" 
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Publish">
+													Publish
+													</a>
+													<?php
+												} else if ($publish_status == 1) {
+													// Hotel is pending approval
+													?>
+													<a class="btn btn-success btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Pending">
+													Pending
+													</a>
+													<a class="btn btn-danger btn-wave waves-effect waves-light"
+													onclick="publish(<?= $hotel_id; ?>, 3)" 
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Reject">
+													Reject
+													</a>
+													<?php
+												} else if ($publish_status == 2) {
+													// Hotel is published
+													?>
+													<a class="btn btn-success btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Published">
+													Published
+													</a>
+													
+													<?php
+												} else if ($publish_status == 3) {
+													// Hotel is rejected
+													?>
+
+													<a class="btn btn-success btn-wave waves-effect waves-light"
+													onclick="publish(<?= $hotel_id; ?>,1)" 
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Publish">
+													Publish
+													</a>
+													<a class="btn btn-danger btn-wave waves-effect waves-light"
+													data-bs-toggle="tooltip" 
+													data-bs-original-title="Rejected">
+													Rejected
+													</a>
+													<?php
+												}
+												?>
+												
+                                                        
 												</div>
 
 												
@@ -290,7 +353,7 @@ $h_a_id=$_SESSION['h_a_id'];
 			function openAddMoreImagesModel(id){
 				$('#editModal').modal('show');
 				$('#load_edit_data').load('ajax/addMoreimages.php',{ h_id:id });
-				$('#load_data').empty();
+				$('#load_data').load('ajax_added_items/moreImages.php',{ h_id:id });
 			}
 
 			
@@ -439,23 +502,17 @@ $h_a_id=$_SESSION['h_a_id'];
 
 	  function addMoreImages() {
 					// Get the selected files from the input element
-					var icimage = document.getElementById('icimage[]').files;
+					var moreimage = document.getElementById('moreimage').files[0]
 					var h_a_id = document.getElementById('h_a_id').value; 
 					var h_id = document.getElementById('h_id').value; 
+
 
 					// Create a new FormData object
 					var formData = new FormData();
 
-					// Check if files are selected and append them to FormData
-					if (icimage.length > 0) {
-						for (let i = 0; i < icimage.length; i++) {
-							formData.append('icimage[]', icimage[i]);
-						}
-					} else {
-						swal("Error", "Please select images to upload", "error");
-						return;
-					}
+					if (moreimage) formData.append('moreimage', moreimage);
 
+			
 					// Append additional data to FormData
 					formData.append('h_a_id', h_a_id);
 					formData.append('h_id', h_id);
@@ -469,11 +526,12 @@ $h_a_id=$_SESSION['h_a_id'];
 						contentType: false, // Prevent jQuery from setting the content type
 						success: function(resp) {
 							if (resp == 200) {
-								swal("Added", "Images Added", "success")
+									swal("Added", "Icon Added", "success")
 									.then((value) => {
 										if (value) {
-											$('#editModal').modal('hide');
-											window.location.reload();
+											
+											$('#load_edit_data').load('ajax/addMoreimages.php',{ h_id:h_id });
+											$('#load_data').load('ajax_added_items/moreImages.php',{ h_id:h_id });
 										}
 									});
 							} else {
@@ -666,6 +724,42 @@ $h_a_id=$_SESSION['h_a_id'];
 		});
 	  }
 
+
+	  function deleteIconMoreImg(i_id,h_id){
+
+		$.ajax({
+			url:'backend/deleteMoreImages.php',
+			method:'POST',
+			data:{
+				i_id:i_id,
+				h_id:h_id
+			},
+			success:function(resp){
+				if(resp == 200){
+					swal("Deleted", "Image Deleted", "success")
+					.then((value) => {
+						if (value) {
+							
+							$('#load_edit_data').load('ajax/addMoreimages.php',{ h_id:h_id });
+											$('#load_data').load('ajax_added_items/moreImages.php',{ h_id:h_id });
+						}
+					});
+				} 
+				else {
+					swal("Cancelled", "Something went wrong", "error")
+					.then((value) => {
+						if (value) {
+							$('#showEdit').modal('hide');
+							window.location.reload();
+						}
+					});
+					console.log(resp);
+				}
+			}
+
+		});
+		}
+
 	  function deleteIconAmm(id,h_id){
 		var ic_id=id;
 		var h_id=h_id;
@@ -738,6 +832,30 @@ $h_a_id=$_SESSION['h_a_id'];
 			}
 
 		});
+	  }
+
+	  function publish(h_id,publish_status){
+		// alert(h_id);
+		// alert(publish_status)
+		$.ajax({
+                    url:'backend/set_publish_status.php',
+                    method:'POST',
+                    data:{
+                        h_id:h_id,
+                        publish_status:publish_status
+                    },success:function(resp){
+                        // alert(resp);
+                        if(resp==200){
+                            swal("Changed", "Published, Wait until admin aproves", "success");
+                            window.location.reload();
+                        }else if(resp==201){
+							swal("Rejected", "Rejected", "Error");
+                            window.location.reload();
+						}else{
+                            swal("Failed", "Status not Changed", "Error");   
+                        }
+                    }
+                })
 	  }
 
 	  	
