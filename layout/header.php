@@ -1036,9 +1036,9 @@ if(!isset($_SESSION['h_a_id'])){
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="email.php" class="side-menu__item">
+                            <a href="raise_ticket.php" class="side-menu__item">
                                 <i class="fe fe-mail side-menu__icon"></i>
-                                <span class="side-menu__label">Mail-Inbox</span>
+                                <span class="side-menu__label">Raise a ticket</span>
                                 <!-- <a href="email.php" class="side-menu__item"> Mail-Inbox</a> -->
                             </a>
                         </li>

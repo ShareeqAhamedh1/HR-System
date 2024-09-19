@@ -1029,6 +1029,13 @@ if(!isset($_SESSION['h_s_a_id'])){
                         </li>
                        
                         </li>
+                        <li class="slide">
+                            <a href="tickets.php" class="side-menu__item">
+                                <i class="ri-bill-line side-menu__icon"></i>
+                                <span class=" side-menu__label">Tickets</span>
+                                <!-- <a href="invoice.php" class="side-menu__item"> Invoice</a> -->
+                            </a>
+                        </li>
                       
                         <li class="slide">
                             <a href="invoice.php" class="side-menu__item">

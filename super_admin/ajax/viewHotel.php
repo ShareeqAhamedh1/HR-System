@@ -3,10 +3,20 @@ include "../../backend/conn.php";
 
 $h_id=$_REQUEST['h_id'];
 
+
+if(isset($_REQUEST['h_a_id'])){
+	$hotel_admin_id=$_REQUEST['h_a_id'];
+}else{
+
 $sqlHotel="SELECT * FROM tbl_hotel WHERE h_id='$h_id'";
 $rsHotel=$conn->query($sqlHotel);
+
 $rowsHotel=$rsHotel->fetch_assoc();
 $hotel_admin_id=$rowsHotel['h_a_id'];
+
+}
+
+
 
 
 $sqlHotelAdmin="SELECT * FROM tbl_hotel_admin WHERE h_a_id='$hotel_admin_id'";
