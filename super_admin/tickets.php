@@ -104,7 +104,8 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $sqlTickets="SELECT * FROM tbl_tickets";
+                                            $sqlTickets = "SELECT * FROM tbl_tickets ORDER BY tic_id DESC";
+
                                             $rsTickets=$conn->query($sqlTickets);
 
                                             if($rsTickets->num_rows>0){
@@ -181,6 +182,7 @@
                                                 </td>
                                             </tr>
                                             <?php
+                                            $num+=1;
                                                 }
                                             }
                                             ?>

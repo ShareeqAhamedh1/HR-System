@@ -51,164 +51,72 @@ $tic_id=$_REQUEST['tic_id'];
 													</nav>
 												</div><!-- main-chat-header -->
 												<div class="main-chat-body" id="ChatBody">
-													<div class="content-inner">
-														<!-- <label class="main-chat-time"><span>3 days ago</span></label> -->
-														<div class="media flex-row-reverse chat-right">
-															<div class="main-img-user online"><img alt="avatar" src="assets/images/faces/2.jpg"></div>
-															<div class="media-body">
+                                                    <div class="content-inner">
+                                                        <?php
+                                                        $sqlSide = "SELECT * FROM tbl_ticket_chat WHERE tic_id='$tic_id'";
+                                                        $rsSide = $conn->query($sqlSide);
 
-                                                            <?php
-                                                                $sqlMsg="SELECT * FROM tbl_ticket_chat WHERE tic_id='$tic_id' AND tic_msg_sender=1";
-                                                                $rsMsg=$conn->query($sqlMsg);
-
-                                                                if($rsMsg->num_rows>0){
-                                                                    while($rowsMsg=$rsMsg->fetch_assoc()){
-                                                                        ?>
-                                                                      
-                                                                      <?php 
-                                                                    if($rowsMsg['tic_img']=="" && $rowsMsg['tic_file']==""){
-                                                                        ?>
-                                                                        <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                         <?= htmlspecialchars($rowsMsg['tic_desc']); ?>
-                                                                        </div>
-                                                                        <?php
-                                                                    }else
-                                                                    ?>
-
-                                                                    <?php 
-                                                                    if($rowsMsg['tic_img']!=""){
-                                                                        ?>
-                                                                        <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                         <img src="assets/img/messages/photos/<?= $rowsMsg['tic_img'] ?>" alt="">
-                                                                         </div>
-                                                                        <?php
-                                                                        if($rowsMsg['tic_desc']!=""){
-                                                                            ?>
-                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                            <?= htmlspecialchars($rowsMsg['tic_desc']); ?>
-                                                                            </div>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                        
-                                                                        <?php
-                                                                    }else
-                                                                    ?>
-                                                                  <?php 
-                                                                        if ($rowsMsg['tic_file'] != "") {
-                                                                            ?>
-                                                                            <a href="assets/img/messages/doc/<?= $rowsMsg['tic_file']; ?>" download class="btn btn-sm btn-outline-secondary mt-2">
-                                                                                <i class="fe fe-download"></i> Download File
-                                                                            </a>
-                                                                            <?php
-                                                                        if($rowsMsg['tic_desc']!=""){
-                                                                            ?>
-                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                            <?= htmlspecialchars($rowsMsg['tic_desc']); ?>
-                                                                            </div>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-
-																  
-																  
-                                                                
-																<div>
-																	<span><?= formatTimeDifference($rowsMsg['tic_date']) ?></span> <a href="javascript:void(0);"><i class="icon ion-android-more-horizontal"></i></a>
-																</div>
-                                                                <?php
-                                                                    }
-                                                                }
-                                                            ?>
-															</div>
-														</div>
-														<div class="media chat-left mb-3">
-                                                            <div class="main-img-user online">
-                                                                <img alt="avatar" src="assets/images/faces/1.jpg" class="rounded-circle" style="width: 50px;">
-                                                            </div>
-                                                            <div class="media-body ms-3">
-
-                                                                <?php
-                                                                    $sqlMsgUser = "SELECT * FROM tbl_ticket_chat WHERE tic_id='$tic_id' AND tic_msg_sender=2";
-                                                                    $rsMsgUser = $conn->query($sqlMsgUser);
-
-                                                                    if ($rsMsgUser->num_rows > 0) {
-                                                                        while ($rowsMsgUser = $rsMsgUser->fetch_assoc()) {
+                                                        if ($rsSide->num_rows > 0) {
+                                                            while ($rowsSide = $rsSide->fetch_assoc()) {
+                                                                $side = $rowsSide['tic_msg_sender'];
+                                                                $chatSide = $side == 1 ? "right" : "left";
+                                                                $userAvatar = $side == 1 ? "assets/images/faces/2.jpg" : "assets/images/faces/1.jpg";
                                                                 ?>
-                                                                    
-                                                                    <?php 
-                                                                    if($rowsMsgUser['tic_img']=="" && $rowsMsgUser['tic_file']==""){
-                                                                        ?>
-                                                                        <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                         <?= htmlspecialchars($rowsMsgUser['tic_desc']); ?>
-                                                                        </div>
-                                                                        <?php
-                                                                    }else
-                                                                    ?>
 
-                                                                    <?php 
-                                                                    if($rowsMsgUser['tic_img']!=""){
-                                                                        ?>
-                                                                        <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                         <img src="assets/img/messages/photos/<?= $rowsMsgUser['tic_img'] ?>" alt="">
-                                                                         </div>
-                                                                        <?php
-                                                                        if($rowsMsgUser['tic_desc']!=""){
-                                                                            ?>
-                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                            <?= htmlspecialchars($rowsMsgUser['tic_desc']); ?>
-                                                                            </div>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                        
-                                                                        <?php
-                                                                    }else
-                                                                    ?>
-                                                                  <?php 
-                                                                        if ($rowsMsgUser['tic_file'] != "") {
-                                                                            ?>
-                                                                            <a href="assets/img/messages/doc/<?= $rowsMsgUser['tic_file']; ?>" download class="btn btn-sm btn-outline-secondary mt-2">
-                                                                                <i class="fe fe-download"></i> Download File
-                                                                            </a>
-                                                                            <?php
-                                                                        if($rowsMsgUser['tic_desc']!=""){
-                                                                            ?>
-                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
-                                                                            <?= htmlspecialchars($rowsMsgUser['tic_desc']); ?>
-                                                                            </div>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-
-
-                                                                    <?php 
-                                                                    if($rowsMsgUser['tic_img']==""){
-                                                                        ?>
-                                                                        
-                                                                        <?php
-                                                                    }
-                                                                    ?>
-
-                                                                    <div class="d-flex justify-content-between mt-2">
-                                                                        <span class="text-muted small"><?= formatTimeDifference($rowsMsgUser['tic_date']); ?></span>
-                                                                        <a href="javascript:void(0);" class="text-muted small"><i class="icon ion-android-more-horizontal"></i></a>
+                                                                <!-- Chat bubble for the message sender -->
+                                                                <div class="media <?= $side == 1 ? 'flex-row-reverse' : '' ?> chat-<?= $chatSide ?>">
+                                                                    <div class="main-img-user online">
+                                                                        <img alt="avatar" src="<?= $userAvatar ?>" class="rounded-circle">
                                                                     </div>
+                                                                    <div class="media-body ms-3">
+                                                                        
+                                                                        <!-- Handle text only -->
+                                                                        <?php if (empty($rowsSide['tic_img']) && empty($rowsSide['tic_file'])) { ?>
+                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
+                                                                                <?= htmlspecialchars($rowsSide['tic_desc']); ?>
+                                                                            </div>
+                                                                        <?php } ?>
+
+                                                                        <!-- Handle image -->
+                                                                        <?php if (!empty($rowsSide['tic_img'])) { ?>
+                                                                            <div class="main-msg-wrapper bg-primary p-2 rounded">
+                                                                                <img src="assets/img/messages/photos/<?= $rowsSide['tic_img']; ?>" alt="Image" class="img-fluid">
+                                                                            </div>
+                                                                            <?php if (!empty($rowsSide['tic_desc'])) { ?>
+                                                                                <div class="main-msg-wrapper bg-primary p-2 rounded">
+                                                                                    <?= htmlspecialchars($rowsSide['tic_desc']); ?>
+                                                                                </div>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+
+                                                                        <!-- Handle file download -->
+                                                                        <?php if (!empty($rowsSide['tic_file'])) { ?>
+                                                                            <a href="assets/img/messages/doc/<?= $rowsSide['tic_file']; ?>" download class="btn btn-sm btn-outline-secondary mt-2">
+                                                                                <i class="fe fe-download"></i> Download File
+                                                                            </a>
+                                                                            <?php if (!empty($rowsSide['tic_desc'])) { ?>
+                                                                                <div class="main-msg-wrapper bg-primary p-2 rounded">
+                                                                                    <?= htmlspecialchars($rowsSide['tic_desc']); ?>
+                                                                                </div>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+
+                                                                        <div class="d-flex justify-content-between mt-2">
+                                                                            <span class="text-muted small"><?= formatTimeDifference($rowsSide['tic_date']); ?></span>
+                                                                            <a href="javascript:void(0);" class="text-muted small">
+                                                                                <i class="icon ion-android-more-horizontal"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End chat bubble -->
+                                                                
                                                                 <?php
-                                                                        }
-                                                                    }
-                                                                ?>
-                                                            </div>
-                                                        </div>
-														
-													</div>
-												</div>
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
                                                 <form action="backend/submit_message.php" method="POST" enctype="multipart/form-data">
                                                     <div class="main-chat-footer">
                                                         <nav class="nav">
