@@ -194,12 +194,21 @@ $h_a_id=$_SESSION['h_a_id'];
 									.then((value) => {
 										if (value) {
 											// $('#editModal').modal('hide');
-											window.location.reload();
+											window.location.href = 'backend/signout.php';
 										}
 									});
 								}
 								else if(resp == 201){
 									swal("Warning", "Entered Passwords are not same", "warning")
+									.then((value) => {
+										if (value) {
+											// $('#editModal').modal('hide');
+											window.location.reload();
+										}
+									});
+
+								}else if(resp == 202){
+									swal("Warning", "Entered Passwords cannot be empty", "error")
 									.then((value) => {
 										if (value) {
 											// $('#editModal').modal('hide');
